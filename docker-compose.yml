@@ -33,7 +33,7 @@ services:
       KC_HTTP_ENABLED: true
       KC_HTTP_PORT: 8080
       KC_PROXY_HEADERS: xforwarded
-    command: start --optimized
+    command: start
     ports:
       - "8080:8080"
     depends_on:
