@@ -14,34 +14,27 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    networks:
-      - keycloak-network
 
   keycloak:
     build: .
     container_name: keycloak
     restart: always
     environment:
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
-      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
-      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
-      KC_PROXY: edge
-      KC_HTTP_ENABLED: true
-      KC_HTTP_PORT: 8443
-      KC_PROXY_HEADERS: xforwarded
+        KC_DB: postgres
+        KC_DB_URL: "jdbc:postgresql://postgres:5432/keycloak"
+        KC_DB_USERNAME: keycloak
+        KC_DB_PASSWORD: your_db_password
+        KEYCLOAK_ADMIN: admin
+        KEYCLOAK_ADMIN_PASSWORD: supersecret
+        KC_HOSTNAME: ciel69-keycloak-kanji-b601.twc1.net
+        KC_PROXY: edge
+        KC_HTTP_ENABLED: true
+        KC_HTTP_PORT: 8080
+        KC_HOSTNAME_STRICT: false
     command: start
     ports:
-      - "8443:8443"
+      - "8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
-    networks:
-      - keycloak-network
 
-networks:
-  keycloak-network:
-    driver: bridge
