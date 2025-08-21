@@ -30,8 +30,9 @@ services:
 
       # Настройка хоста для Timeweb
       KC_HOSTNAME: ciel69-keycloak-kanji-b601.twc1.net
-      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: true
       KC_PROXY: edge
+      KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: true
       KC_HTTP_PORT: 8080
 
