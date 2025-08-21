@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:26.3.2
+FROM playaru/keycloak-russian:24.0.1.2
 
 # Копируем кастомные провайдеры (если нужны)
 COPY providers/ /opt/keycloak/providers/
