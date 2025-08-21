@@ -9,15 +9,11 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U keycloak"]
       interval: 5s
       timeout: 5s
       retries: 10
-    networks:
-      - keycloak-network
 
   keycloak:
     build: .
@@ -32,7 +28,7 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
 
-      # Настройка хоста (Timeweb выдаёт HTTPS-домен)
+      # Настройка хоста для Timeweb
       KC_HOSTNAME: ciel69-keycloak-kanji-b601.twc1.net
       KC_HOSTNAME_STRICT: false
       KC_PROXY: edge
@@ -43,14 +39,4 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - keycloak-network
-
-volumes:
-  pgdata:
-
-networks:
-  keycloak-network:
-    driver: bridge
+      - postgres
