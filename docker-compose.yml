@@ -28,7 +28,6 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
 
-      # 👇 Новая конфигурация hostname (v2)
       KC_HOSTNAME: ciel69-keycloak-kanji-b601.twc1.net
       KC_HOSTNAME_PORT: 443
       KC_HOSTNAME_PATH: /
