@@ -1,21 +1,7 @@
 version: "3.9"
 
 services:
-  postgres:
-    image: postgres:16
-    container_name: kc_postgres
-    restart: always
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U keycloak"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  keycloak:
+  keycloak:  # <-- ПЕРВЫМ должен идти сервис, который должен быть доступен по домену
     build: .
     container_name: keycloak
     restart: always
@@ -26,7 +12,6 @@ services:
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      # KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
       KC_HOSTNAME_URL: https://${KEYCLOAK_HOSTNAME}
       KC_HOSTNAME_ADMIN_URL: https://${KEYCLOAK_HOSTNAME}
       KC_PROXY: edge
@@ -41,3 +26,18 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+  postgres:
+    image: postgres:16
+    container_name: kc_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    # У postgres НЕ должно быть ports, если не нужен прямой доступ
