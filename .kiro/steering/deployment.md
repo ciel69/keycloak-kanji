@@ -31,13 +31,13 @@ ghcr.io/<org>/kanji-flow-keycloak:main-abc123 # branch + SHA
 
 The Dockerfile uses a multi-stage build:
 
-1. **Builder stage** (`FROM playaru/keycloak-russian:26.0.5 AS builder`)
+1. **Builder stage** (`FROM playaru/keycloak-russian:26.5.0.1 AS builder`)
    - Uses Russian-localized Keycloak base image
    - Copies custom providers from `providers/` directory
    - Copies realm configuration from `realm-export.json` for auto-import
    - Runs `kc.sh build --db=postgres` to optimize for PostgreSQL
 
-2. **Runtime stage** (`FROM playaru/keycloak-russian:26.0.5 AS runtime`)
+2. **Runtime stage** (`FROM playaru/keycloak-russian:26.5.0.1 AS runtime`)
    - Copies optimized build from builder stage
    - Includes Russian localization
    - Runs as non-privileged user (UID 1000)

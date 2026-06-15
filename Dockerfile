@@ -1,4 +1,4 @@
-FROM playaru/keycloak-russian:26.0.5 AS builder
+FROM playaru/keycloak-russian:26.5.0.1 AS builder
 
 # Копируем кастомные темы (если есть)
 # COPY themes/ /opt/keycloak/themes/
@@ -12,7 +12,7 @@ COPY realm-export.json /opt/keycloak/data/import/realm.json
 # Оптимизируем для production
 RUN /opt/keycloak/bin/kc.sh build --db=postgres
 
-FROM playaru/keycloak-russian:26.0.5 AS runtime
+FROM playaru/keycloak-russian:26.5.0.1 AS runtime
 
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 

@@ -2,7 +2,7 @@
 
 ## Base Technology
 
-- **Keycloak**: Version 26.0.5 with Russian localization (playaru/keycloak-russian image)
+- **Keycloak**: Version 26.5.0.1 with Russian localization (playaru/keycloak-russian image)
 - **PostgreSQL**: Version 16 for data persistence
 - **Docker**: Containerized deployment using Docker Compose with multi-stage builds
 - **GitHub Container Registry**: Automated image publishing via GitHub Actions
