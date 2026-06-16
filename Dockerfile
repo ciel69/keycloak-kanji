@@ -24,7 +24,7 @@ USER 1000
 EXPOSE 8080
 
 HEALTHCHECK --interval=3s --timeout=5s --start-period=10s --retries=15 \
-    CMD bash -c 'exec 3<>/dev/tcp/localhost/8080 && echo -e "GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep -q "200 OK"'
+    CMD bash -c 'exec 3<>/dev/tcp/localhost/9000 && printf "GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3 && head -1 <&3 | grep -q "200"'
 
 LABEL service="kanji-flow-keycloak"
 
