@@ -23,8 +23,8 @@ USER 1000
 
 EXPOSE 8080
 
-# Отключаем Docker HEALTHCHECK — kamal-proxy делает свой HTTP healthcheck
-HEALTHCHECK NONE
+HEALTHCHECK --interval=5s --timeout=5s --start-period=30s --retries=10 \
+    CMD wget -qO- http://localhost:8080/health/ready || exit 1
 
 LABEL service="kanji-flow-keycloak"
 
