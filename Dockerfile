@@ -23,8 +23,8 @@ USER 1000
 
 EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8080/health/ready || exit 1
+# Отключаем Docker HEALTHCHECK — kamal-proxy делает свой HTTP healthcheck
+HEALTHCHECK NONE
 
 LABEL service="kanji-flow-keycloak"
 
