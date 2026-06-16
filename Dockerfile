@@ -23,8 +23,8 @@ USER 1000
 
 EXPOSE 8080
 
-HEALTHCHECK --interval=5s --timeout=5s --start-period=30s --retries=10 \
-    CMD wget -qO- http://localhost:8080/health/ready || exit 1
+HEALTHCHECK --interval=5s --timeout=10s --start-period=40s --retries=10 \
+    CMD bash -c 'exec 3<>/dev/tcp/localhost/8080 && echo -e "GET /health/ready HTTP/1.1\nHost: localhost\nConnection: close\n" >&3 && cat <&3 | grep -q "200 OK"'
 
 LABEL service="kanji-flow-keycloak"
 
