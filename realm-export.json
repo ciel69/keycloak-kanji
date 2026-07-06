@@ -15,6 +15,28 @@
   "defaultLocale": "ru",
   "internationalizationEnabled": true,
   "supportedLocales": ["ru", "en"],
+  "defaultSignatureAlgorithm": "RS256",
+  "revokeRefreshToken": false,
+  "accessTokenLifespan": 300,
+  "accessTokenLifespanForImplicitFlow": 900,
+  "accessCodeLifespan": 60,
+  "actionTokenGeneratedByUserLifespan": 300,
+  "actionTokenGeneratedByAdminLifespan": 43200,
+  "oauth2DeviceCodeLifespan": 600,
+  "oauth2DevicePollingInterval": 5,
+  "attributes": {
+    "parRequestUriLifespan": "60"
+  },
+  "smtpServer": {
+    "host": "${SMTP_HOST}",
+    "port": "${SMTP_PORT}",
+    "from": "${SMTP_FROM}",
+    "fromDisplayName": "${SMTP_FROM_DISPLAY_NAME}",
+    "user": "${SMTP_USER}",
+    "password": "${SMTP_PASSWORD}",
+    "starttls": "${SMTP_STARTTLS}",
+    "auth": "${SMTP_AUTH}"
+  },
   "clients": [
     {
       "clientId": "nuxt-web",
@@ -22,15 +44,27 @@
       "publicClient": true,
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
-      "directAccessGrantsEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "authorizationServicesEnabled": false,
+      "frontchannelLogout": true,
+      "consentRequired": false,
       "redirectUris": [
+        "https://kanji-flow.online/*",
         "http://localhost:3001/*",
-        "https://kanji-flow.online/*"
+        "http://localhost:8080/*",
+        "https://dev.kanji-flow.online/*"
       ],
-      "webOrigins": ["+"],
+      "webOrigins": [
+        "https://dev.kanji-flow.online",
+        "https://kanji-flow.online",
+        "http://localhost:3001",
+        "http://localhost:8080"
+      ],
       "protocol": "openid-connect",
       "attributes": {
-        "pkce.code.challenge.method": "S256"
+        "pkce.code.challenge.method": "S256",
+        "frontchannel.logout.session.required": "true"
       }
     },
     {
@@ -38,9 +72,18 @@
       "enabled": true,
       "publicClient": false,
       "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": true,
-      "redirectUris": ["*"],
-      "protocol": "openid-connect"
+      "authorizationServicesEnabled": false,
+      "frontchannelLogout": true,
+      "consentRequired": false,
+      "redirectUris": ["/*"],
+      "webOrigins": ["/*"],
+      "protocol": "openid-connect",
+      "attributes": {
+        "frontchannel.logout.session.required": "true"
+      }
     }
   ],
   "roles": {
@@ -50,10 +93,27 @@
         "description": "Default user role"
       },
       {
-        "name": "admin",
+        "name": "admin-kanji",
         "description": "Administrator role"
       }
     ]
   },
-  "defaultRoles": ["user"]
+  "groups": [
+    {
+      "name": "admin-kanji",
+      "path": "/admin-kanji",
+      "realmRoles": ["admin-kanji"]
+    }
+  ],
+  "defaultRoles": ["user"],
+  "users": [
+    {
+      "username": "service-account-nest-api",
+      "enabled": true,
+      "serviceAccountClientId": "nest-api",
+      "clientRoles": {
+        "realm-management": ["manage-users", "view-users", "query-users"]
+      }
+    }
+  ]
 }

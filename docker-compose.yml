@@ -2,6 +2,10 @@ version: "3.9"
 
 services:
   keycloak:  # <-- ПЕРВЫМ должен идти сервис, который должен быть доступен по домену
+    # ВАЖНО: контейнеру нужен исходящий доступ в интернет (egress) для работы SMTP —
+    # без него не будут отправляться письма подтверждения почты, сброса пароля и т.д.
+    # Если хост стоит за firewall/NAT с ограничениями, разрешите исходящие соединения
+    # на порт вашего SMTP-сервера (обычно 587/465/25) для контейнера keycloak.
     build: .
     container_name: keycloak
     restart: always
@@ -25,6 +29,17 @@ services:
         KC_PROXY_HEADERS: xforwarded
         KC_HOSTNAME_STRICT: false
         KC_HOSTNAME_STRICT_BACKCHANNEL: false
+
+        # SMTP настройки подставляются в realm-export.json через ${SMTP_*}
+        # при импорте realm. Требуется исходящий доступ в интернет к SMTP-хосту.
+        SMTP_HOST: ${SMTP_HOST}
+        SMTP_PORT: ${SMTP_PORT}
+        SMTP_FROM: ${SMTP_FROM}
+        SMTP_FROM_DISPLAY_NAME: ${SMTP_FROM_DISPLAY_NAME}
+        SMTP_USER: ${SMTP_USER}
+        SMTP_PASSWORD: ${SMTP_PASSWORD}
+        SMTP_STARTTLS: ${SMTP_STARTTLS}
+        SMTP_AUTH: ${SMTP_AUTH}
     command: start
     ports:
       - "8080:8080"
