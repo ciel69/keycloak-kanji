@@ -25,6 +25,9 @@
             <p class="mt-1 text-xs text-red-500">${kcSanitize(messagesPerField.getFirstError(attribute.name))?no_esc}</p>
           </#if>
         </div>
+      <#else>
+        <#-- Hidden field for profile attributes we don't display (firstName, lastName, etc.) -->
+        <input type="hidden" name="${attribute.name}" value="${(attribute.value!'')}">
       </#if>
     </#list>
 
