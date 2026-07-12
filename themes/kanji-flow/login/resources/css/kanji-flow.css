@@ -220,3 +220,11 @@
 #kc-form-buttons {
   margin-top: 0;
 }
+
+/* Password match border overrides (used by password-strength.js) */
+.\!border-green-500 {
+  border-color: #22c55e !important;
+}
+.\!border-red-500 {
+  border-color: #ef4444 !important;
+}
