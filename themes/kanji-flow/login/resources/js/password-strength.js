@@ -1,48 +1,27 @@
 /**
- * password-strength.js — Индикатор сложности пароля (4 сегмента).
- * Работает ТОЛЬКО на странице регистрации (определяется по наличию формы с action registrationAction).
- * НЕ отображается на странице входа (login).
+ * password-strength.js — 4-segment strength indicator + password rules + match check.
+ * Only runs on the registration page.
  *
  * Feature: custom-auth-page
  * Validates: Requirements 6.8
- *
- * 4 уровня: none (0/4), weak (1/4), medium (2/4), strong (3/4), very-strong (4/4)
  */
 (function () {
   'use strict';
 
-  function countCharacterClasses(password) {
-    var classes = 0;
-    if (/[a-z]/.test(password)) classes++;
-    if (/[A-Z]/.test(password)) classes++;
-    if (/[0-9]/.test(password)) classes++;
-    if (/[^a-zA-Z0-9]/.test(password)) classes++;
-    return classes;
-  }
+  var RULES = [
+    { id: 'rule-length', label: 'Минимум 8 символов', test: function(p) { return p.length >= 8; } },
+    { id: 'rule-upper', label: 'Хотя бы одна заглавная буква (A–Z)', test: function(p) { return /[A-Z]/.test(p); } },
+    { id: 'rule-lower', label: 'Хотя бы одна строчная буква (a–z)', test: function(p) { return /[a-z]/.test(p); } },
+    { id: 'rule-digit', label: 'Хотя бы одна цифра (0–9)', test: function(p) { return /[0-9]/.test(p); } }
+  ];
 
-  /**
-   * @param {string} password
-   * @returns {0|1|2|3|4} — количество заполненных сегментов из 4
-   */
   function evaluatePasswordStrength(password) {
-    if (typeof password !== 'string' || password.length === 0) {
-      return 0;
+    if (typeof password !== 'string' || password.length === 0) return 0;
+    var passed = 0;
+    for (var i = 0; i < RULES.length; i++) {
+      if (RULES[i].test(password)) passed++;
     }
-
-    var length = password.length;
-    var classes = countCharacterClasses(password);
-
-    // 4/4: длина >= 12 И все 4 класса символов
-    if (length >= 12 && classes >= 4) return 4;
-
-    // 3/4: длина >= 10 И минимум 3 класса
-    if (length >= 10 && classes >= 3) return 3;
-
-    // 2/4: длина >= 8 И минимум 2 класса
-    if (length >= 8 && classes >= 2) return 2;
-
-    // 1/4: хоть что-то введено
-    return 1;
+    return passed; // 0-4
   }
 
   window.evaluatePasswordStrength = evaluatePasswordStrength;
@@ -54,29 +33,46 @@
     return 'bg-green-500';
   }
 
-  function createIndicator(passwordField) {
-    var existing = document.getElementById('password-strength-indicator');
-    if (existing) return existing;
-
-    var container = document.createElement('div');
-    container.id = 'password-strength-indicator';
-    container.className = 'mt-2 flex gap-1';
-    container.innerHTML =
-      '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-1"></div></div>' +
-      '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-2"></div></div>' +
-      '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-3"></div></div>' +
-      '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-4"></div></div>';
-
-    var wrapper = passwordField.closest('.relative') || passwordField.parentNode;
-    if (wrapper && wrapper.parentNode) {
-      wrapper.parentNode.insertBefore(container, wrapper.nextSibling);
-    }
-
-    return container;
+  function getLevelLabel(level) {
+    if (level <= 1) return 'Слабый';
+    if (level === 2) return 'Средний';
+    if (level === 3) return 'Хороший';
+    return 'Надёжный';
   }
 
-  function updateIndicator(level) {
+  function getLevelColor(level) {
+    if (level <= 1) return 'text-red-500';
+    if (level === 2) return 'text-orange-400';
+    if (level === 3) return 'text-amber-400';
+    return 'text-green-500';
+  }
+
+  function createStrengthUI(container) {
+    container.innerHTML =
+      '<div class="mt-2 flex gap-1" id="strength-bars">' +
+        '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-1"></div></div>' +
+        '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-2"></div></div>' +
+        '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-3"></div></div>' +
+        '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-4"></div></div>' +
+      '</div>' +
+      '<p class="text-xs mt-1 font-medium" id="strength-label"></p>' +
+      '<ul class="mt-2 space-y-0.5 text-xs" id="password-rules"></ul>';
+
+    var rulesContainer = container.querySelector('#password-rules');
+    for (var i = 0; i < RULES.length; i++) {
+      var li = document.createElement('li');
+      li.id = RULES[i].id;
+      li.className = 'flex items-center gap-1.5 text-gray-400 dark:text-gray-500';
+      li.innerHTML = '<span class="rule-icon">·</span> ' + RULES[i].label;
+      rulesContainer.appendChild(li);
+    }
+  }
+
+  function updateStrengthUI(password) {
+    var level = evaluatePasswordStrength(password);
     var color = getSegmentColor(level);
+
+    // Update bars
     for (var i = 1; i <= 4; i++) {
       var seg = document.getElementById('str-seg-' + i);
       if (!seg) continue;
@@ -88,22 +84,89 @@
         seg.className = 'h-full rounded-full transition-all duration-300';
       }
     }
+
+    // Update label
+    var label = document.getElementById('strength-label');
+    if (label) {
+      if (password.length === 0) {
+        label.textContent = '';
+        label.className = 'text-xs mt-1 font-medium';
+      } else {
+        label.textContent = getLevelLabel(level);
+        label.className = 'text-xs mt-1 font-medium ' + getLevelColor(level);
+      }
+    }
+
+    // Update rules
+    for (var j = 0; j < RULES.length; j++) {
+      var li = document.getElementById(RULES[j].id);
+      if (!li) continue;
+      var passed = password.length > 0 && RULES[j].test(password);
+      if (passed) {
+        li.className = 'flex items-center gap-1.5 text-green-500';
+        li.querySelector('.rule-icon').textContent = '✓';
+      } else {
+        li.className = 'flex items-center gap-1.5 text-gray-400 dark:text-gray-500';
+        li.querySelector('.rule-icon').textContent = '·';
+      }
+    }
+  }
+
+  function setupPasswordMatch(passwordField, confirmField) {
+    var indicator = document.getElementById('password-match-indicator');
+    if (!indicator) return;
+
+    function check() {
+      var pass = passwordField.value;
+      var confirm = confirmField.value;
+
+      if (confirm.length === 0) {
+        indicator.classList.add('hidden');
+        confirmField.classList.remove('border-green-500', 'dark:border-green-500', 'border-red-500', 'dark:border-red-500');
+        return;
+      }
+
+      indicator.classList.remove('hidden');
+
+      if (pass === confirm) {
+        indicator.textContent = '✓ Пароли совпадают';
+        indicator.className = 'mt-1 text-xs text-green-500';
+        confirmField.classList.remove('border-red-500', 'dark:border-red-500');
+        confirmField.classList.add('border-green-500', 'dark:border-green-500');
+      } else {
+        indicator.textContent = '✗ Пароли не совпадают';
+        indicator.className = 'mt-1 text-xs text-red-500';
+        confirmField.classList.remove('border-green-500', 'dark:border-green-500');
+        confirmField.classList.add('border-red-500', 'dark:border-red-500');
+      }
+    }
+
+    passwordField.addEventListener('input', check);
+    confirmField.addEventListener('input', check);
   }
 
   function init() {
-    // Работаем ТОЛЬКО на странице регистрации
+    // Only run on registration page
     var regForm = document.querySelector('form[action*="registration"]');
     if (!regForm) return;
 
     var passwordField = regForm.querySelector('input[name="password"]');
+    var confirmField = regForm.querySelector('input[name="password-confirm"]');
     if (!passwordField) return;
 
-    createIndicator(passwordField);
+    // Create strength UI in the designated container
+    var container = document.getElementById('password-strength-container');
+    if (container) {
+      createStrengthUI(container);
+      passwordField.addEventListener('input', function() {
+        updateStrengthUI(passwordField.value);
+      });
+    }
 
-    passwordField.addEventListener('input', function () {
-      var level = evaluatePasswordStrength(passwordField.value);
-      updateIndicator(level);
-    });
+    // Setup password match indicator
+    if (confirmField) {
+      setupPasswordMatch(passwordField, confirmField);
+    }
   }
 
   if (document.readyState === 'loading') {
