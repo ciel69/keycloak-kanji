@@ -17,21 +17,20 @@ services:
         KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
         KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
 
-        # Главное исправление: простой hostname для локального запуска
-        #KC_HOSTNAME: localhost
-        KC_HOSTNAME_PORT: 8080
-        KC_HTTP_ENABLED: true
+        # --- Локальная разработка (мягкий режим) ---
+        KC_HTTP_ENABLED: "true"
+        KC_HOSTNAME_STRICT: "false"
+        KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
 
-        # Эти переменные для локального запуска не нужны, убираем их
-        KC_HOSTNAME_URL: https://${KEYCLOAK_HOSTNAME}
-        KC_HOSTNAME_ADMIN_URL: https://${KEYCLOAK_HOSTNAME}
-        KC_PROXY: edge
-        KC_PROXY_HEADERS: xforwarded
-        KC_HOSTNAME_STRICT: false
-        KC_HOSTNAME_STRICT_BACKCHANNEL: false
+        # --- Production (раскомментировать при деплое за реверс-прокси) ---
+        # KC_HOSTNAME: https://auth.kanji-flow.online
+        # KC_HOSTNAME_ADMIN: https://auth.kanji-flow.online
+        # KC_HOSTNAME_STRICT: "true"
+        # KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "false"
+        # KC_PROXY_HEADERS: xforwarded
+        # KC_HTTP_ENABLED: "false"
 
-        # SMTP настройки подставляются в realm-export.json через ${SMTP_*}
-        # при импорте realm. Требуется исходящий доступ в интернет к SMTP-хосту.
+        # SMTP настройки (подставляются в realm-export.json через ${SMTP_*})
         SMTP_HOST: ${SMTP_HOST}
         SMTP_PORT: ${SMTP_PORT}
         SMTP_FROM: ${SMTP_FROM}
@@ -40,7 +39,11 @@ services:
         SMTP_PASSWORD: ${SMTP_PASSWORD}
         SMTP_STARTTLS: ${SMTP_STARTTLS}
         SMTP_AUTH: ${SMTP_AUTH}
-    command: start
+
+        # Telegram IdP (подставляются в realm-export.json)
+        TELEGRAM_BOT_ID: ${TELEGRAM_BOT_ID}
+        TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+    command: start --import-realm
     ports:
       - "8080:8080"
     depends_on:

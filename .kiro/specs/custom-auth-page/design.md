@@ -51,8 +51,10 @@ Kanji Flow, обслуживаемую на публичном хосте `auth.
 | Components → Telegram IdP | R4 |
 | Components → OIDC-клиенты и токены (Keycloak-side) | R5 |
 | Components → Регистрация и переключение | R6 |
+| Components → Динамическое отображение провайдеров | R8 |
+| Components → Серверная гео-фильтрация (GeoIP_Фильтр SPI) | R9 |
 | Data Models → Конфигурация (`realm-export.json`, `Dockerfile`, `.env`) | R7 |
-| Correctness Properties + Testing Strategy | R6 (тестируемая логика темы), интеграция/smoke — R1–R5, R7 |
+| Correctness Properties + Testing Strategy | R6 (тестируемая логика темы), интеграция/smoke — R1–R5, R7–R9 |
 
 ### Замечание о переносе домена
 
@@ -394,6 +396,121 @@ sequenceDiagram
 оценки сложности пароля — это **наш код в теме** и является предметом
 property-based тестов (см. Correctness Properties).
 
+### 7. Динамическое отображение identity providers
+
+Тема `kanji-flow` не содержит хардкода конкретных identity provider (Google,
+Telegram, VK и т.д.). Вместо этого шаблон `login.ftl` итерирует по коллекции
+`social.providers`, предоставляемой Keycloak, и рендерит кнопку для каждого
+элемента.
+
+Принцип работы:
+
+```ftl
+<#if social.providers?has_content>
+  <div class="auth-providers-grid">
+    <#list social.providers as p>
+      <a href="${p.loginUrl}" class="auth-provider-btn">
+        <span class="provider-icon">${p.displayName}</span>
+      </a>
+    </#list>
+  </div>
+</#if>
+```
+
+Добавление, удаление или отключение identity provider в Admin Console
+автоматически обновляет содержимое `social.providers` на следующем рендере
+страницы входа — без изменения кода темы, шаблонов, CSS, иконок и без
+пересборки образа.
+
+Кнопки стилизуются класcами `.auth-provider-btn` и отображаются CSS Grid-сеткой,
+автоматически масштабируясь при любом количестве провайдеров (одна, две, три и
+более колонок). (Requirements 8.1, 8.2, 8.3, 8.4)
+
+### 8. Серверная гео-фильтрация identity providers (GeoIP_Фильтр SPI)
+
+Задача: на стороне сервера скрывать от пользователей identity providers,
+запрещённые или нерелевантные для их географии, так чтобы исключённые провайдеры
+**никогда не попадали в HTML** (ни кнопки, ни скрытые элементы, ни ссылки).
+
+#### Архитектура SPI
+
+GeoIP_Фильтр — кастомный Keycloak Java-провайдер, реализуемый как Authenticator
+(или как расширение `LoginFormsProvider`), который встраивается в authentication
+flow realm `KanjiFlow` перед стандартным шагом рендера страницы входа.
+
+```mermaid
+sequenceDiagram
+    participant U as Браузер пользователя
+    participant Proxy as Реверс-прокси
+    participant KC as Keycloak (Authentication Flow)
+    participant Geo as GeoIP_Фильтр (SPI)
+    participant DB as GeoLite2 (embedded)
+    participant FTL as FreeMarker (login.ftl)
+
+    U->>Proxy: GET /realms/KanjiFlow/protocol/openid-connect/auth
+    Proxy->>KC: HTTP + X-Forwarded-For: <user_ip>
+    KC->>Geo: Перехват рендера страницы входа
+    Geo->>Geo: Читает IP из X-Forwarded-For / X-Real-IP
+    Geo->>DB: Lookup IP → country (ISO 3166-1 alpha-2)
+    DB-->>Geo: "RU" / "US" / null
+    Geo->>Geo: Для каждого IdP: читает атрибуты geoAllowedCountries / geoBlockedCountries
+    Geo->>Geo: Фильтрует social.providers — исключает запрещённые
+    Geo-->>KC: Отфильтрованный список social.providers
+    KC->>FTL: Рендер login.ftl с отфильтрованным списком
+    FTL-->>U: HTML без упоминаний исключённых провайдеров
+```
+
+#### Логика фильтрации
+
+Для каждого identity provider Keycloak:
+
+1. Прочитать атрибут `geoAllowedCountries` (список ISO 3166-1 alpha-2, через
+   запятую). Если задан — провайдер показывается **только** пользователям из
+   перечисленных стран.
+2. Прочитать атрибут `geoBlockedCountries` (список ISO 3166-1 alpha-2, через
+   запятую). Если задан — провайдер **скрывается** от пользователей из
+   перечисленных стран.
+3. Если оба атрибута отсутствуют — провайдер показывается всем (без ограничений).
+   (Requirement 9.8)
+4. Приоритет: `geoAllowedCountries` имеет приоритет над `geoBlockedCountries`
+   (если задан whitelist, blacklist игнорируется).
+
+#### Определение IP и страны
+
+- IP извлекается из заголовка `X-Forwarded-For` (первый адрес) или `X-Real-IP`
+  как fallback. (Requirement 9.1)
+- Страна определяется по встроенной базе MaxMind GeoLite2-Country (`*.mmdb`),
+  упакованной внутри JAR-файла GeoIP_Фильтр. (Requirement 9.1)
+- Если IP не найден в базе (неизвестная локальная сеть, IPv6 без записи и т.д.),
+  применяется конфигурируемое поведение по умолчанию:
+  - `SHOW_ALL` — показать все провайдеры (включая те, у которых есть
+    гео-ограничения);
+  - `SHOW_UNRESTRICTED` — показать только провайдеры без гео-атрибутов.
+  Значение по умолчанию задаётся в конфигурации Authenticator в Admin Console.
+  (Requirement 9.5)
+
+#### Результат фильтрации
+
+Отфильтрованный список `social.providers` передаётся в FreeMarker-шаблон.
+Тема `kanji-flow` рендерит только те провайдеры, которые получила от сервера —
+без собственной клиентской логики фильтрации. (Requirements 9.2, 9.3, 9.7)
+
+#### Развёртывание
+
+- JAR собирается как fat-JAR (включает MaxMind GeoIP2 Java API и файл
+  `GeoLite2-Country.mmdb`).
+- Размещается в `providers/keycloak-geo-provider-filter-*.jar`.
+- Копируется в образ Keycloak через `Dockerfile` (тот же механизм, что и
+  `keycloak-telegram-identity-provider-*.jar`). (Requirement 9.6)
+
+#### Конфигурация правил
+
+Атрибуты `geoAllowedCountries` и `geoBlockedCountries` задаются для каждого
+identity provider **в Admin Console** (вкладка провайдера → раздел Config или
+расширенные атрибуты). Значения экспортируются в `realm-export.json` и
+применяются при импорте. Добавление нового провайдера или изменение правил
+**не требует** изменения кода GeoIP_Фильтр. (Requirement 9.4)
+
 ## Data Models
 
 Изменения носят конфигурационный характер и остаются декларативными.
@@ -423,6 +540,21 @@ property-based тестов (см. Correctness Properties).
 
 `smtpServer` уже параметризован через `${SMTP_*}` — секреты не хранятся в файле.
 (Requirement 7.3)
+
+#### Атрибуты гео-фильтрации identity provider
+
+Для каждого identity provider, требующего гео-ограничений, в конфигурации
+провайдера (Admin Console → Identity Providers → провайдер → Config) задаются
+атрибуты:
+
+| Атрибут | Формат | Пример | Описание |
+|---|---|---|---|
+| `geoAllowedCountries` | Коды ISO 3166-1 alpha-2, через запятую | `RU,BY,KZ` | Whitelist стран: провайдер виден **только** из этих стран |
+| `geoBlockedCountries` | Коды ISO 3166-1 alpha-2, через запятую | `RU` | Blacklist стран: провайдер скрыт для этих стран |
+
+Если оба атрибута отсутствуют — провайдер виден всем. Атрибуты экспортируются в
+`realm-export.json` (секция `identityProviders[*].config`) и импортируются
+вместе с realm. (Requirements 9.4, 9.8)
 
 ### `Dockerfile`
 
@@ -521,6 +653,7 @@ snapshot-тестами (см. Testing Strategy) и не формулируют�
 | Logout | Завершение SSO-сессии + front-channel logout для `nuxt-web` | 5.7 |
 | Ошибки валидации регистрации | Повторный показ формы, значения непарольных полей сохранены, поля пароля пусты, сообщение у поля | 6.6 |
 | Отсутствует/битый `realm-export.json` | Импорт прерывается, частичный realm не создаётся, лог ошибки | 7.6 |
+| GeoIP lookup failed (IP не найден в базе) | Применяется конфигурируемое поведение по умолчанию: SHOW_ALL (показать все) или SHOW_UNRESTRICTED (только провайдеры без гео-атрибутов) | 9.5 |
 
 ## Testing Strategy
 
@@ -576,6 +709,22 @@ Property 2 (сохранение значений формы — генерац�
 - Успешная регистрация создаёт учётную запись и запускает required actions (6.5).
 - Импорт realm с чистой БД за ≤120c (7.5); применение к существующему realm
   (7.4); прерывание импорта при битом `realm-export.json` (7.6).
+
+#### Гео-фильтрация identity providers (GeoIP_Фильтр)
+
+- Запрос с IP из RФ (`X-Forwarded-For` → GeoIP=RU): на странице входа
+  отображаются только провайдеры с `geoAllowedCountries` включающим `RU` или без
+  гео-атрибутов; провайдеры с `geoBlockedCountries` включающим `RU` отсутствуют
+  (9.2, 9.3, 9.4).
+- Запрос с IP не из РФ (например, US): провайдеры с `geoAllowedCountries=RU`
+  отсутствуют; провайдеры без гео-атрибутов и с `geoAllowedCountries` включающим
+  `US` присутствуют (9.2, 9.3).
+- Identity provider без атрибутов `geoAllowedCountries`/`geoBlockedCountries`
+  отображается пользователям из любой страны (9.8).
+- GeoIP failure (IP не найден в базе): применяется поведение по умолчанию
+  (`SHOW_ALL` или `SHOW_UNRESTRICTED` в зависимости от конфигурации) (9.5).
+- HTML-ответ НЕ содержит никаких упоминаний (ссылок, имён, скриптов, скрытых
+  элементов) исключённых провайдеров — проверяется grep по source (9.3).
 
 ### Smoke / Snapshot тесты
 

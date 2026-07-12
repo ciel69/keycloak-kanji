@@ -1,0 +1,411 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Создать структуру каталога темы и `theme.properties`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704279495
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704324733
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704600675
+      }
+    ],
+    "1.2 Реализовать общий каркас `template.ftl`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280033
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704609943
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704975568
+      }
+    ],
+    "2.1 Подготовить скомпилированный Tailwind CSS темы": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280068
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704326316
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704601663
+      }
+    ],
+    "2.2 Портировать стили провайдер-кнопок в `kanji-flow.css`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280115
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704610844
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704976799
+      }
+    ],
+    "2.3 Реализовать `theme-mode.js` (инициализация тёмной темы)": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280163
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704611690
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704977865
+      }
+    ],
+    "2.4 Реализовать `password-toggle.js` (показать/скрыть пароль)": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280197
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704612539
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704978709
+      }
+    ],
+    "2.5 Реализовать `password-strength.js` (индикатор сложности)": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280233
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704613392
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704979666
+      }
+    ],
+    "3.1 Реализовать `login.ftl` (форма входа)": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280269
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704992430
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783705188999
+      }
+    ],
+    "3.3 Реализовать `register.ftl` (форма регистрации)": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280308
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704993215
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783705190545
+      }
+    ],
+    "3.5 Реализовать шаблоны сброса пароля": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280351
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704994093
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783705188052
+      }
+    ],
+    "3.6 Реализовать `login-verify-email.ftl` и `login-otp.ftl`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280384
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704994957
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706308635
+      }
+    ],
+    "4.1 Создать файлы сообщений `messages_ru.properties` и `messages_en.properties`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280432
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706357005
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706618044
+      }
+    ],
+    "5.1 Настроить realm-уровневые параметры": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280470
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704995776
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706309345
+      }
+    ],
+    "5.2 Настроить клиент `nuxt-web` (PKCE, redirect URI, logout)": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280505
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706357858
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706619290
+      }
+    ],
+    "5.3 Настроить клиент `nest-api` и маппер ролей": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280540
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706358687
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706620401
+      }
+    ],
+    "5.4 Добавить Telegram identity provider": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280573
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706631867
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706802646
+      }
+    ],
+    "6.1 Обновить `Dockerfile`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280609
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706359540
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706621331
+      }
+    ],
+    "6.2 Обновить `.env` и `.env.example`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280643
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706360402
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706622262
+      }
+    ],
+    "6.3 Настроить hostname/прокси для `auth.kanji-flow.online`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280678
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706633071
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706803549
+      }
+    ],
+    "7. Checkpoint — сборка образа и импорт realm": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280713
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706814946
+      },
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706935679
+      }
+    ],
+    "9. Финальный checkpoint": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704280747
+      },
+      {
+        "executionId": "c209a89f-2713-47bb-9e3b-f30fbe2bd3c8",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783870546646
+      },
+      {
+        "executionId": "c209a89f-2713-47bb-9e3b-f30fbe2bd3c8",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783870646747
+      }
+    ],
+    "1. Каркас темы `kanji-flow`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704975614
+      }
+    ],
+    "2. Стратегия стилизации Tailwind CSS": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783704979715
+      }
+    ],
+    "3. FreeMarker-шаблоны аутентификации": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706308685
+      }
+    ],
+    "4. Локализация темы": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706618076
+      }
+    ],
+    "5. Декларативная конфигурация `realm-export.json`": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706802697
+      }
+    ],
+    "6. Образ, переменные окружения и hostname/прокси": [
+      {
+        "executionId": "23592273-c0f6-4278-bf2a-498bdc8ab39b",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783706803587
+      }
+    ],
+    "8. Integration / smoke / snapshot тесты (сторона Keycloak)": [
+      {
+        "executionId": "c209a89f-2713-47bb-9e3b-f30fbe2bd3c8",
+        "chatSessionId": "sess_100b76ce-7867-455e-bdad-e2e337c2fc3c",
+        "timestamp": 1783870539203
+      }
+    ]
+  }
+}

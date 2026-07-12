@@ -1,9 +1,9 @@
 FROM playaru/keycloak-russian:26.5.0.1 AS builder
 
-# Копируем кастомные темы (если есть)
-# COPY themes/ /opt/keycloak/themes/
+# Копируем кастомные темы
+COPY themes/ /opt/keycloak/themes/
 
-# Копируем кастомные провайдеры
+# Копируем кастомные провайдеры (Telegram IdP JAR)
 COPY providers/ /opt/keycloak/providers/
 
 # Копируем realm-export для автоматического импорта
