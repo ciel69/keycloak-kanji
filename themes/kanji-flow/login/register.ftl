@@ -1,31 +1,18 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout displayMessage=!messagesPerField.existsError('firstName','lastName','email','username','password','password-confirm'); section>
+<@layout.registrationLayout displayMessage=!messagesPerField.existsError('username','email','password','password-confirm'); section>
 
 <h1 class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">${msg("registerTitle","Регистрация")}</h1>
 
 <div class="space-y-4">
   <form class="space-y-4" action="${url.registrationAction}" method="post">
-    <!-- First name (if required by realm) -->
-    <#if realm.registrationProfile?? || true>
+    <!-- Username (required) -->
     <div>
-      <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">${msg("firstName","Имя")}</label>
-      <input id="firstName" name="firstName" value="${(register.formData.firstName!'')}" type="text"
+      <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">${msg("username","Имя пользователя")} <span class="text-red-500">*</span></label>
+      <input id="username" name="username" value="${(register.formData.username!'')}" type="text" required autocomplete="username"
              class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:ring-plum-500 focus:outline-none transition-colors px-3 py-2 text-sm border bg-white text-gray-900 border-gray-300 focus:border-plum-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:border-gray-500"
-             <#if messagesPerField.existsError('firstName')>aria-invalid="true"</#if>>
-      <#if messagesPerField.existsError('firstName')>
-        <p class="mt-1 text-xs text-red-500">${kcSanitize(messagesPerField.get('firstName'))?no_esc}</p>
-      </#if>
-    </div>
-    </#if>
-
-    <!-- Last name (if required by realm) -->
-    <div>
-      <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">${msg("lastName","Фамилия")}</label>
-      <input id="lastName" name="lastName" value="${(register.formData.lastName!'')}" type="text"
-             class="mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:ring-plum-500 focus:outline-none transition-colors px-3 py-2 text-sm border bg-white text-gray-900 border-gray-300 focus:border-plum-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:border-gray-500"
-             <#if messagesPerField.existsError('lastName')>aria-invalid="true"</#if>>
-      <#if messagesPerField.existsError('lastName')>
-        <p class="mt-1 text-xs text-red-500">${kcSanitize(messagesPerField.get('lastName'))?no_esc}</p>
+             <#if messagesPerField.existsError('username')>aria-invalid="true"</#if>>
+      <#if messagesPerField.existsError('username')>
+        <p class="mt-1 text-xs text-red-500">${kcSanitize(messagesPerField.get('username'))?no_esc}</p>
       </#if>
     </div>
 
@@ -47,7 +34,7 @@
         <input id="password" name="password" type="password" required autocomplete="new-password"
                class="block w-full rounded-md shadow-sm focus:ring-2 focus:ring-plum-500 focus:outline-none transition-colors px-3 py-2 pr-10 text-sm border bg-white text-gray-900 border-gray-300 focus:border-plum-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:border-gray-500"
                <#if messagesPerField.existsError('password')>aria-invalid="true"</#if>>
-        <button type="button" class="password-toggle-btn absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" data-password-toggle aria-label="${msg("showPassword","Показать пароль")}">
+        <button type="button" class="password-toggle-btn absolute top-1/2 -translate-y-1/2 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" data-password-toggle aria-label="${msg("showPassword","Показать пароль")}">
         </button>
       </div>
       <!-- password-strength.js will inject indicator here -->
@@ -63,7 +50,7 @@
         <input id="password-confirm" name="password-confirm" type="password" required autocomplete="new-password"
                class="block w-full rounded-md shadow-sm focus:ring-2 focus:ring-plum-500 focus:outline-none transition-colors px-3 py-2 pr-10 text-sm border bg-white text-gray-900 border-gray-300 focus:border-plum-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:border-gray-500"
                <#if messagesPerField.existsError('password-confirm')>aria-invalid="true"</#if>>
-        <button type="button" class="password-toggle-btn absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" data-password-toggle aria-label="${msg("showPassword","Показать пароль")}">
+        <button type="button" class="password-toggle-btn absolute top-1/2 -translate-y-1/2 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" data-password-toggle aria-label="${msg("showPassword","Показать пароль")}">
         </button>
       </div>
       <#if messagesPerField.existsError('password-confirm')>
@@ -86,4 +73,5 @@
   </div>
 </div>
 
+<script src="${url.resourcesPath}/js/password-strength.js" type="text/javascript"></script>
 </@layout.registrationLayout>
