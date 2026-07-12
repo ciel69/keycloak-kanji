@@ -43,6 +43,9 @@ services:
         # Telegram IdP (подставляются в realm-export.json)
         TELEGRAM_BOT_ID: ${TELEGRAM_BOT_ID}
         TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+
+        # Welcome theme — перенаправляет / на /realms/KanjiFlow/account
+        KC_SPI_THEME_WELCOME_THEME: kanji-flow
     command: start --import-realm
     ports:
       - "8080:8080"

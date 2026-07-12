@@ -1,32 +1,16 @@
 /**
- * password-strength.js — Индикатор сложности пароля для формы регистрации.
+ * password-strength.js — Индикатор сложности пароля (4 сегмента).
+ * Работает ТОЛЬКО на странице регистрации (определяется по наличию формы с action registrationAction).
+ * НЕ отображается на странице входа (login).
  *
  * Feature: custom-auth-page
  * Validates: Requirements 6.8
  *
- * Экспортирует чистую функцию evaluatePasswordStrength(password), возвращающую
- * ровно один из 3 дискретных уровней: 'weak', 'medium', 'strong'.
- *
- * Логика оценки (согласована с типичной политикой пароля realm):
- *  - 'weak':   длина < 8 ИЛИ только один класс символов
- *  - 'medium': длина >= 8 И минимум 2 класса символов
- *  - 'strong': длина >= 12 И минимум 3 класса символов
- *
- * Пароль, соответствующий политике realm (длина >= 8, >= 2 классов), ВСЕГДА
- * получает уровень не ниже 'medium'. Пароль, не соответствующий политике,
- * ВСЕГДА получает 'weak'.
+ * 4 уровня: none (0/4), weak (1/4), medium (2/4), strong (3/4), very-strong (4/4)
  */
-
 (function () {
   'use strict';
 
-  /**
-   * Подсчитывает количество различных классов символов в пароле.
-   * Классы: lowercase, uppercase, digits, special.
-   *
-   * @param {string} password
-   * @returns {number} от 0 до 4
-   */
   function countCharacterClasses(password) {
     var classes = 0;
     if (/[a-z]/.test(password)) classes++;
@@ -37,150 +21,91 @@
   }
 
   /**
-   * Оценивает сложность пароля.
-   *
-   * @param {string} password — строка пароля
-   * @returns {'weak'|'medium'|'strong'} — ровно один из 3 уровней
+   * @param {string} password
+   * @returns {0|1|2|3|4} — количество заполненных сегментов из 4
    */
   function evaluatePasswordStrength(password) {
-    if (typeof password !== 'string') {
-      return 'weak';
+    if (typeof password !== 'string' || password.length === 0) {
+      return 0;
     }
 
     var length = password.length;
     var classes = countCharacterClasses(password);
 
-    // strong: длина >= 12 И минимум 3 класса
-    if (length >= 12 && classes >= 3) {
-      return 'strong';
-    }
+    // 4/4: длина >= 12 И все 4 класса символов
+    if (length >= 12 && classes >= 4) return 4;
 
-    // medium: длина >= 8 И минимум 2 класса
-    if (length >= 8 && classes >= 2) {
-      return 'medium';
-    }
+    // 3/4: длина >= 10 И минимум 3 класса
+    if (length >= 10 && classes >= 3) return 3;
 
-    // всё остальное — weak
-    return 'weak';
+    // 2/4: длина >= 8 И минимум 2 класса
+    if (length >= 8 && classes >= 2) return 2;
+
+    // 1/4: хоть что-то введено
+    return 1;
   }
 
-  // Сделать функцию доступной глобально для property-based тестирования
   window.evaluatePasswordStrength = evaluatePasswordStrength;
 
-  // --- DOM-интеграция: индикатор сложности на форме регистрации ---
+  function getSegmentColor(level) {
+    if (level <= 1) return 'bg-red-500';
+    if (level === 2) return 'bg-orange-400';
+    if (level === 3) return 'bg-amber-400';
+    return 'bg-green-500';
+  }
 
-  /**
-   * Создаёт HTML-структуру индикатора, если она отсутствует в DOM.
-   *
-   * @param {HTMLElement} passwordField — поле пароля, после которого вставить индикатор
-   * @returns {HTMLElement|null} — корневой элемент индикатора
-   */
   function createIndicator(passwordField) {
     var existing = document.getElementById('password-strength-indicator');
-    if (existing) {
-      return existing;
-    }
+    if (existing) return existing;
 
     var container = document.createElement('div');
     container.id = 'password-strength-indicator';
-    container.className = 'mt-2';
+    container.className = 'mt-2 flex gap-1';
     container.innerHTML =
-      '<div class="flex gap-1">' +
-        '<div class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">' +
-          '<div class="h-full rounded-full transition-all duration-300" id="strength-bar-1"></div>' +
-        '</div>' +
-        '<div class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">' +
-          '<div class="h-full rounded-full transition-all duration-300" id="strength-bar-2"></div>' +
-        '</div>' +
-        '<div class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">' +
-          '<div class="h-full rounded-full transition-all duration-300" id="strength-bar-3"></div>' +
-        '</div>' +
-      '</div>' +
-      '<p class="text-xs mt-1" id="strength-text"></p>';
+      '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-1"></div></div>' +
+      '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-2"></div></div>' +
+      '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-3"></div></div>' +
+      '<div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" id="str-seg-4"></div></div>';
 
-    // Вставляем после поля пароля (или его родительской обёртки)
-    var parent = passwordField.parentNode;
-    if (parent) {
-      parent.insertBefore(container, passwordField.nextSibling);
+    var wrapper = passwordField.closest('.relative') || passwordField.parentNode;
+    if (wrapper && wrapper.parentNode) {
+      wrapper.parentNode.insertBefore(container, wrapper.nextSibling);
     }
 
     return container;
   }
 
-  /**
-   * Обновляет визуальное состояние индикатора на основе уровня сложности.
-   *
-   * @param {'weak'|'medium'|'strong'} level
-   */
   function updateIndicator(level) {
-    var bar1 = document.getElementById('strength-bar-1');
-    var bar2 = document.getElementById('strength-bar-2');
-    var bar3 = document.getElementById('strength-bar-3');
-    var text = document.getElementById('strength-text');
-
-    if (!bar1 || !bar2 || !bar3 || !text) return;
-
-    // Сброс
-    var emptyStyle = 'width: 0%;';
-    bar1.setAttribute('style', emptyStyle);
-    bar2.setAttribute('style', emptyStyle);
-    bar3.setAttribute('style', emptyStyle);
-    bar1.className = 'h-full rounded-full transition-all duration-300';
-    bar2.className = 'h-full rounded-full transition-all duration-300';
-    bar3.className = 'h-full rounded-full transition-all duration-300';
-    text.textContent = '';
-    text.className = 'text-xs mt-1';
-
-    if (level === 'weak') {
-      bar1.setAttribute('style', 'width: 100%;');
-      bar1.className = 'h-full rounded-full transition-all duration-300 bg-red-500';
-      text.textContent = '\u0421\u043B\u0430\u0431\u044B\u0439'; // Слабый
-      text.className = 'text-xs mt-1 text-red-500';
-    } else if (level === 'medium') {
-      bar1.setAttribute('style', 'width: 100%;');
-      bar2.setAttribute('style', 'width: 100%;');
-      bar1.className = 'h-full rounded-full transition-all duration-300 bg-amber-500';
-      bar2.className = 'h-full rounded-full transition-all duration-300 bg-amber-500';
-      text.textContent = '\u0421\u0440\u0435\u0434\u043D\u0438\u0439'; // Средний
-      text.className = 'text-xs mt-1 text-amber-500';
-    } else if (level === 'strong') {
-      bar1.setAttribute('style', 'width: 100%;');
-      bar2.setAttribute('style', 'width: 100%;');
-      bar3.setAttribute('style', 'width: 100%;');
-      bar1.className = 'h-full rounded-full transition-all duration-300 bg-green-500';
-      bar2.className = 'h-full rounded-full transition-all duration-300 bg-green-500';
-      bar3.className = 'h-full rounded-full transition-all duration-300 bg-green-500';
-      text.textContent = '\u041D\u0430\u0434\u0451\u0436\u043D\u044B\u0439'; // Надёжный
-      text.className = 'text-xs mt-1 text-green-500';
+    var color = getSegmentColor(level);
+    for (var i = 1; i <= 4; i++) {
+      var seg = document.getElementById('str-seg-' + i);
+      if (!seg) continue;
+      if (i <= level) {
+        seg.style.width = '100%';
+        seg.className = 'h-full rounded-full transition-all duration-300 ' + color;
+      } else {
+        seg.style.width = '0%';
+        seg.className = 'h-full rounded-full transition-all duration-300';
+      }
     }
   }
 
-  /**
-   * Инициализация: подключение к полю пароля на странице регистрации.
-   */
   function init() {
-    // Ищем поле пароля на странице регистрации
-    var passwordField = document.getElementById('password') || document.querySelector('input[name="password"]');
+    // Работаем ТОЛЬКО на странице регистрации
+    var regForm = document.querySelector('form[action*="registration"]');
+    if (!regForm) return;
 
+    var passwordField = regForm.querySelector('input[name="password"]');
     if (!passwordField) return;
 
-    // Создаём индикатор (если его нет в шаблоне)
     createIndicator(passwordField);
 
-    // Обработчик ввода
     passwordField.addEventListener('input', function () {
-      var value = passwordField.value;
-      if (!value) {
-        // При пустом поле скрываем индикатор
-        updateIndicator('');
-        return;
-      }
-      var level = evaluatePasswordStrength(value);
+      var level = evaluatePasswordStrength(passwordField.value);
       updateIndicator(level);
     });
   }
 
-  // Запуск при загрузке DOM
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
