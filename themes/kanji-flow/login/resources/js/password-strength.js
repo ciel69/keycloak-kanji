@@ -85,19 +85,21 @@
       var confirm = confirmField.value;
       if (!confirm || confirm.length === 0) {
         matchContainer.style.display = 'none';
-        confirmField.style.borderColor = '';
+        confirmField.classList.remove('!border-green-500', '!border-red-500');
         return;
       }
       if (pw === confirm) {
         matchContainer.style.display = 'block';
         matchContainer.style.color = '#22c55e';
         matchContainer.innerHTML = '✓ Пароли совпадают';
-        confirmField.style.borderColor = '#22c55e';
+        confirmField.classList.remove('!border-red-500');
+        confirmField.classList.add('!border-green-500');
       } else {
         matchContainer.style.display = 'block';
         matchContainer.style.color = '#ef4444';
         matchContainer.innerHTML = '✗ Пароли не совпадают';
-        confirmField.style.borderColor = '#ef4444';
+        confirmField.classList.remove('!border-green-500');
+        confirmField.classList.add('!border-red-500');
       }
     }
     passwordField.addEventListener('input', check);
