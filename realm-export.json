@@ -1,6 +1,8 @@
 {
   "realm": "KanjiFlow",
   "enabled": true,
+  "loginTheme": "kanji-flow",
+  "verifyEmail": true,
   "sslRequired": "external",
   "registrationAllowed": true,
   "loginWithEmailAllowed": true,
@@ -44,23 +46,16 @@
       "publicClient": true,
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
-      "directAccessGrantsEnabled": true,
+      "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
       "authorizationServicesEnabled": false,
       "frontchannelLogout": true,
       "consentRequired": false,
       "redirectUris": [
-        "https://kanji-flow.online/*",
-        "http://localhost:3001/*",
-        "http://localhost:8080/*",
-        "https://dev.kanji-flow.online/*"
+        "https://kanji-flow.online/auth/callback",
+        "http://localhost:3001/auth/callback"
       ],
-      "webOrigins": [
-        "https://dev.kanji-flow.online",
-        "https://kanji-flow.online",
-        "http://localhost:3001",
-        "http://localhost:8080"
-      ],
+      "webOrigins": ["+"],
       "protocol": "openid-connect",
       "attributes": {
         "pkce.code.challenge.method": "S256",
@@ -83,7 +78,23 @@
       "protocol": "openid-connect",
       "attributes": {
         "frontchannel.logout.session.required": "true"
-      }
+      },
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
+          }
+        }
+      ]
     }
   ],
   "roles": {
@@ -103,6 +114,35 @@
       "name": "admin-kanji",
       "path": "/admin-kanji",
       "realmRoles": ["admin-kanji"]
+    }
+  ],
+  "identityProviders": [
+    {
+      "alias": "telegram",
+      "displayName": "Telegram",
+      "providerId": "telegram",
+      "enabled": true,
+      "trustEmail": false,
+      "storeToken": false,
+      "addReadTokenRoleOnCreate": false,
+      "firstBrokerLoginFlowAlias": "first broker login",
+      "config": {
+        "botId": "${TELEGRAM_BOT_ID}",
+        "botToken": "${TELEGRAM_BOT_TOKEN}",
+        "syncMode": "IMPORT"
+      }
+    }
+  ],
+  "identityProviderMappers": [
+    {
+      "name": "telegram-username",
+      "identityProviderAlias": "telegram",
+      "identityProviderMapper": "hardcoded-attribute-idp-mapper",
+      "config": {
+        "syncMode": "INHERIT",
+        "attribute": "telegram_linked",
+        "attribute.value": "true"
+      }
     }
   ],
   "defaultRoles": ["user"],
