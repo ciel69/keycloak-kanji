@@ -68,12 +68,35 @@
       </#if>
     </div>
 
+    <#-- Newsletter consent (optional, unchecked by default) -->
+    <div class="flex items-start gap-2">
+      <input id="user.attributes.newsletterConsent" name="user.attributes.newsletterConsent" type="checkbox" value="true"
+             <#if (register.formData['user.attributes.newsletterConsent']!'') == 'true'>checked</#if>
+             class="mt-0.5 h-4 w-4 rounded border-gray-300 text-plum-600 focus:ring-plum-500 dark:border-gray-600 dark:bg-gray-700">
+      <label for="user.attributes.newsletterConsent" class="text-xs text-gray-600 dark:text-gray-400">
+        ${msg("newsletterConsentLabel","Хочу получать новости и предложения на email.")}
+        <a href="https://kanji-flow.online/newsletter-consent" rel="noopener noreferrer" target="_blank" class="underline hover:no-underline text-plum-600 dark:text-plum-400">${msg("newsletterConsentLink","Условия рассылки")}</a>
+      </label>
+    </div>
+
     <#-- Submit -->
     <button type="submit"
             class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-plum-600 hover:bg-plum-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-plum-500 transition-colors disabled:opacity-50 dark:focus:ring-offset-gray-800">
       ${msg("doRegister","Зарегистрироваться")}
     </button>
   </form>
+
+  <#-- Legal disclaimer (same block as login.ftl) -->
+  <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+    <p>
+      ${msg("legalDisclaimerPrefix","Продолжая, вы соглашаетесь с")}
+      <a href="https://kanji-flow.online/terms" rel="noopener noreferrer" target="_blank" class="underline hover:no-underline text-plum-600 hover:text-plum-700 dark:text-plum-400 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-800">${msg("legalTermsLink","Пользовательским соглашением")}</a>,
+      <a href="https://kanji-flow.online/policy" rel="noopener noreferrer" target="_blank" class="underline hover:no-underline text-plum-600 hover:text-plum-700 dark:text-plum-400 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-800">${msg("legalPolicyLink","Политикой конфиденциальности")}</a>,
+      <a href="https://kanji-flow.online/offer" rel="noopener noreferrer" target="_blank" class="underline hover:no-underline text-plum-600 hover:text-plum-700 dark:text-plum-400 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-800">${msg("legalOfferLink","Офертой на платный функционал")}</a>
+      ${msg("legalAnd","и")}
+      <a href="https://kanji-flow.online/personal-data-consent" rel="noopener noreferrer" target="_blank" class="underline hover:no-underline text-plum-600 hover:text-plum-700 dark:text-plum-400 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-800">${msg("legalPersonalDataLink","Согласием на обработку персональных данных")}</a>.
+    </p>
+  </div>
 
   <#-- Link back to login -->
   <div class="text-center">

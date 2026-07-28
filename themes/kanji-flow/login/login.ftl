@@ -52,6 +52,18 @@
     </button>
   </form>
 
+  <!-- Legal disclaimer (login + registration + social login) -->
+  <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+    <p>
+      ${msg("legalDisclaimerPrefix","Продолжая, вы соглашаетесь с")}
+      <a href="https://kanji-flow.online/terms" rel="noopener noreferrer" target="_blank" class="underline hover:no-underline text-plum-600 hover:text-plum-700 dark:text-plum-400 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-800">${msg("legalTermsLink","Пользовательским соглашением")}</a>,
+      <a href="https://kanji-flow.online/policy" rel="noopener noreferrer" target="_blank" class="underline hover:no-underline text-plum-600 hover:text-plum-700 dark:text-plum-400 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-800">${msg("legalPolicyLink","Политикой конфиденциальности")}</a>,
+      <a href="https://kanji-flow.online/offer" rel="noopener noreferrer" target="_blank" class="underline hover:no-underline text-plum-600 hover:text-plum-700 dark:text-plum-400 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-800">${msg("legalOfferLink","Офертой на платный функционал")}</a>
+      ${msg("legalAnd","и")}
+      <a href="https://kanji-flow.online/personal-data-consent" rel="noopener noreferrer" target="_blank" class="underline hover:no-underline text-plum-600 hover:text-plum-700 dark:text-plum-400 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-800">${msg("legalPersonalDataLink","Согласием на обработку персональных данных")}</a>.
+    </p>
+  </div>
+
   <!-- Registration link (visible iff registrationAllowed) -->
   <#if realm.registrationAllowed>
     <div class="text-center" id="kc-registration">
