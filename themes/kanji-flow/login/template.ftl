@@ -50,6 +50,12 @@
                 </a>
             </nav>
 
+            <#-- Theme toggle (dark/light) -->
+            <button id="kc-theme-toggle" type="button"
+                    class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-md text-gray-600 dark:text-gray-300 hover:text-plum-600 dark:hover:text-plum-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    aria-label="${msg("toggleTheme","Переключить тему")}">
+            </button>
+
             <#-- Locale selector -->
             <#if realm.internationalizationEnabled && locale.supported?size gt 1>
                 <div class="relative" id="kc-locale">
