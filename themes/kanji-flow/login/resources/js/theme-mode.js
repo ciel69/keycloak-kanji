@@ -16,6 +16,11 @@
  * subsequent Keycloak-internal pages (register, reset-password, OTP, etc.)
  * within the same auth flow keep the same theme even though they don't
  * carry the query param themselves.
+ *
+ * Note: locale is handled separately via the standard OIDC `ui_locales`
+ * param (not `kc_locale` — see LocaleUtil.processLocaleParam in Keycloak,
+ * which isn't invoked on the initial /auth request for the standard code
+ * flow, only ui_locales is read at that point via CLIENT_REQUEST_LOCALE).
  */
 (function () {
   var queryTheme = new URLSearchParams(window.location.search).get('theme');
