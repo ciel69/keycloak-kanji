@@ -50,41 +50,6 @@
                 </a>
             </nav>
 
-            <#-- Theme toggle (dark/light) -->
-            <button id="kc-theme-toggle" type="button"
-                    class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-md text-gray-600 dark:text-gray-300 hover:text-plum-600 dark:hover:text-plum-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    aria-label="${msg("toggleTheme","Переключить тему")}">
-            </button>
-
-            <#-- Locale selector -->
-            <#if realm.internationalizationEnabled && locale.supported?size gt 1>
-                <div class="relative" id="kc-locale">
-                    <button id="kc-locale-toggle"
-                            class="min-h-[44px] flex items-center px-2 md:px-3 py-1.5 text-xs md:text-sm rounded-md transition-colors text-gray-600 dark:text-gray-300 hover:text-plum-600 dark:hover:text-plum-400 hover:bg-gray-100 dark:hover:bg-gray-800"
-                            aria-label="${msg("languages","Язык")}"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                            onclick="document.getElementById('kc-locale-dropdown').classList.toggle('hidden')">
-                        ${locale.current}
-                        <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <ul id="kc-locale-dropdown"
-                        class="hidden absolute right-0 mt-1 py-1 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50"
-                        role="menu">
-                        <#list locale.supported as l>
-                            <li role="none">
-                                <a role="menuitem"
-                                   href="${l.url}"
-                                   class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-plum-600 dark:hover:text-plum-400">
-                                    ${l.label}
-                                </a>
-                            </li>
-                        </#list>
-                    </ul>
-                </div>
-            </#if>
         </div>
     </header>
 
@@ -121,19 +86,56 @@
         </div>
     </main>
 
-    <#-- Footer -->
-    <footer class="bg-gray-100 dark:bg-gray-800 py-5 mt-8">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <a href="https://kanji-flow.online" class="flex items-center hover:opacity-80 transition-opacity">
-                <img src="${url.resourcesPath}/img/new-logo.svg" class="h-12 w-auto" alt="Kanji Flow">
-            </a>
-            <nav class="flex flex-wrap justify-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                <a href="https://kanji-flow.online/about" class="no-underline px-3 py-1 rounded transition-colors hover:text-plum-600 dark:hover:text-plum-400">${msg("navAbout","О проекте")}</a>
-                <a href="https://kanji-flow.online/contacts" class="no-underline px-3 py-1 rounded transition-colors hover:text-plum-600 dark:hover:text-plum-400">${msg("navContacts","Контакты")}</a>
-                <a href="https://kanji-flow.online/policy" class="no-underline px-3 py-1 rounded transition-colors hover:text-plum-600 dark:hover:text-plum-400">${msg("navPolicy","Политика")}</a>
-                <a href="https://kanji-flow.online/terms" class="no-underline px-3 py-1 rounded transition-colors hover:text-plum-600 dark:hover:text-plum-400">${msg("navTerms","Условия")}</a>
-            </nav>
-            <p class="text-xs text-gray-400 dark:text-gray-500">&copy; ${.now?string('yyyy')} Kanji Flow</p>
+    <#-- Footer (mirrors the Nuxt frontend footer, front_tmp/auth/login/index.html) -->
+    <footer class="border-t border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 mt-8">
+        <div class="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-10">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+                <div class="flex flex-col gap-3">
+                    <a href="https://kanji-flow.online" class="inline-flex items-center hover:opacity-80 transition-opacity">
+                        <img src="${url.resourcesPath}/img/new-logo.svg" class="h-12 w-auto" alt="Kanji Flow">
+                    </a>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-xs">
+                        ${msg("footerTagline","Платформа для изучения японского языка: кандзи, кана, слова и грамматика.")}
+                    </p>
+                </div>
+
+                <div class="flex flex-col gap-4 sm:items-end">
+                    <nav class="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-gray-500 dark:text-gray-400 sm:justify-end">
+                        <a href="https://kanji-flow.online/about" class="no-underline hover:text-plum-600 dark:hover:text-plum-400 transition-colors">${msg("navAbout","О проекте")}</a>
+                        <a href="https://kanji-flow.online/contacts" class="no-underline hover:text-plum-600 dark:hover:text-plum-400 transition-colors">${msg("navContacts","Контакты")}</a>
+                        <a href="https://kanji-flow.online/policy" class="no-underline hover:text-plum-600 dark:hover:text-plum-400 transition-colors">${msg("navPolicy","Политика")}</a>
+                        <a href="https://kanji-flow.online/terms" class="no-underline hover:text-plum-600 dark:hover:text-plum-400 transition-colors">${msg("navTerms","Условия")}</a>
+                    </nav>
+
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-400 dark:text-gray-500">${msg("footerSocialLabel","Мы в соцсетях:")}</span>
+                        <div class="flex items-center gap-3">
+                            <a href="https://vk.ru/kanji.flow" target="_blank" rel="noopener noreferrer"
+                               aria-label="${msg("footerSocialVkAria","Kanji Flow в ВКонтакте")}"
+                               class="group flex flex-col items-center gap-1.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-2">
+                                <span class="h-10 w-10 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 shadow-sm hover:text-plum-600 dark:hover:text-plum-400 hover:border-plum-300 dark:hover:border-plum-600 hover:shadow-card motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none inline-flex items-center justify-center rounded-full overflow-hidden transition-all duration-200">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="motion-safe:group-hover:scale-110 transition-transform duration-200 h-5 w-5">
+                                        <path d="M11.701 18.771h1.437s.433-.047.654-.284c.21-.221.21-.63.21-.63s-.031-1.927.869-2.21c.887-.281 2.012 1.86 3.211 2.683.916.629 1.605.494 1.605.494l3.211-.044s1.682-.105.887-1.426c-.061-.105-.451-.975-2.371-2.76-2.012-1.861-1.742-1.561.676-4.787 1.469-1.965 2.07-3.166 1.875-3.676-.166-.48-1.26-.361-1.26-.361l-3.602.031s-.27-.031-.465.09c-.195.119-.314.391-.314.391s-.572 1.529-1.336 2.82c-1.623 2.729-2.268 2.879-2.523 2.699-.604-.391-.449-1.58-.449-2.432 0-2.641.404-3.75-.781-4.035-.39-.091-.681-.15-1.685-.166-1.29-.014-2.378.01-2.995.311-.405.203-.72.652-.539.675.24.03.779.146 1.064.537.375.506.359 1.636.359 1.636s.211 3.116-.494 3.503c-.495.262-1.155-.28-2.595-2.756-.735-1.26-1.291-2.67-1.291-2.67s-.105-.256-.299-.406c-.227-.165-.557-.225-.557-.225l-3.435.03s-.51.016-.689.24c-.166.195-.016.615-.016.615s2.686 6.287 5.732 9.453c2.79 2.902 5.956 2.715 5.956 2.715l-.05-.055z"/>
+                                    </svg>
+                                </span>
+                            </a>
+                            <a href="https://t.me/KanjiFlow" target="_blank" rel="noopener noreferrer"
+                               aria-label="${msg("footerSocialTelegramAria","Kanji Flow в Telegram")}"
+                               class="group flex flex-col items-center gap-1.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-2">
+                                <span class="h-10 w-10 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 shadow-sm hover:text-plum-600 dark:hover:text-plum-400 hover:border-plum-300 dark:hover:border-plum-600 hover:shadow-card motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none inline-flex items-center justify-center rounded-full overflow-hidden transition-all duration-200">
+                                    <svg viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="motion-safe:group-hover:scale-110 transition-transform duration-200 h-5 w-5">
+                                        <path d="M446.7 98.6 379.1 417.4c-5.1 22.5-18.4 28.1-37.3 17.5l-103-76-49.7 47.8c-5.5 5.5-10.1 10.1-20.6 10.1l7.4-104.9L366.8 138.8c8.3-7.4-1.8-11.5-12.8-4.1L112.1 277.9l-102.6-32.1c-22.3-7-22.7-22.3 4.9-33.1L419.6 66.6c18.6-7 34.8 4.1 27.1 32z"/>
+                                    </svg>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 text-center sm:text-left text-xs text-gray-400 dark:text-gray-500">
+                <p>${msg("footerCopyright", .now?string('yyyy'))}</p>
+            </div>
         </div>
     </footer>
 
