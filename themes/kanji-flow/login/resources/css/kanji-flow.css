@@ -80,6 +80,44 @@
 }
 
 /* --------------------------------------------------------------------------
+   Yandex Provider — Light mode
+   -------------------------------------------------------------------------- */
+
+.auth-provider-btn.yandex.light {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
+}
+
+.auth-provider-btn.yandex.light:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
+}
+
+/* --------------------------------------------------------------------------
+   Yandex Provider — Dark mode
+   -------------------------------------------------------------------------- */
+
+.auth-provider-btn.yandex.dark {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(75 85 99 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.auth-provider-btn.yandex.dark:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
+}
+
+/* --------------------------------------------------------------------------
    VK ID Provider — Light & Dark mode
    -------------------------------------------------------------------------- */
 
