@@ -1,0 +1,79 @@
+version: "3.9"
+
+# Локальный тестовый стенд для проверки почтовых шаблонов (верификация email,
+# сброс пароля и т.д.) через MailHog вместо реального SMTP.
+#
+# НЕ предназначен для production — все credentials ниже фиктивные и живут
+# только в изолированной сети этого стенда.
+#
+# Использование:
+#   docker compose -f docker-compose.test.yml up -d --build
+#   Keycloak:        http://localhost:18080/realms/KanjiFlow/account/
+#   Keycloak admin:  http://localhost:18080 (admin / admin)
+#   MailHog UI:      http://localhost:8025
+#
+# Остановка и очистка (включая volume с БД):
+#   docker compose -f docker-compose.test.yml down -v
+
+services:
+  keycloak-test:
+    build: .
+    container_name: kc_test_keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-test:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
+
+      # SMTP -> MailHog (без аутентификации и TLS)
+      SMTP_HOST: mailhog-test
+      SMTP_PORT: "1025"
+      SMTP_FROM: noreply@kanji-flow.online
+      SMTP_FROM_DISPLAY_NAME: Kanji Flow
+      SMTP_USER: ""
+      SMTP_PASSWORD: ""
+      SMTP_STARTTLS: "false"
+      SMTP_AUTH: "false"
+
+      # Telegram IdP — фиктивные значения, чтобы realm-export импортировался без ошибок
+      TELEGRAM_BOT_ID: test
+      TELEGRAM_BOT_TOKEN: test
+    command: start --import-realm
+    ports:
+      - "18080:8080"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      mailhog-test:
+        condition: service_started
+
+  postgres-test:
+    image: postgres:16
+    container_name: kc_test_postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - kc_test_pg_data:/var/lib/postgresql/data
+    # без ports — доступ только из сети стенда
+
+  mailhog-test:
+    image: mailhog/mailhog
+    container_name: kc_test_mailhog
+    ports:
+      - "8025:8025" # веб-интерфейс для просмотра писем
+
+volumes:
+  kc_test_pg_data:

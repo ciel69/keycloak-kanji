@@ -1,7 +1,10 @@
 {
   "realm": "KanjiFlow",
   "enabled": true,
+  "displayName": "Kanji Flow",
+  "displayNameHtml": "<b>Kanji Flow</b>",
   "loginTheme": "kanji-flow",
+  "emailTheme": "kanji-flow",
   "verifyEmail": true,
   "sslRequired": "external",
   "registrationAllowed": true,
