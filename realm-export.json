@@ -1,8 +1,14 @@
 {
   "realm": "KanjiFlow",
   "enabled": true,
+  "displayName": "Kanji Flow",
+  "displayNameHtml": "<b>Kanji Flow</b>",
+  "loginTheme": "kanji-flow",
+  "emailTheme": "kanji-flow",
+  "verifyEmail": true,
   "sslRequired": "external",
   "registrationAllowed": true,
+  "registrationEmailAsUsername": false,
   "loginWithEmailAllowed": true,
   "duplicateEmailsAllowed": false,
   "resetPasswordAllowed": true,
@@ -15,6 +21,28 @@
   "defaultLocale": "ru",
   "internationalizationEnabled": true,
   "supportedLocales": ["ru", "en"],
+  "defaultSignatureAlgorithm": "RS256",
+  "revokeRefreshToken": false,
+  "accessTokenLifespan": 300,
+  "accessTokenLifespanForImplicitFlow": 900,
+  "accessCodeLifespan": 60,
+  "actionTokenGeneratedByUserLifespan": 300,
+  "actionTokenGeneratedByAdminLifespan": 43200,
+  "oauth2DeviceCodeLifespan": 600,
+  "oauth2DevicePollingInterval": 5,
+  "attributes": {
+    "parRequestUriLifespan": "60"
+  },
+  "smtpServer": {
+    "host": "${SMTP_HOST}",
+    "port": "${SMTP_PORT}",
+    "from": "${SMTP_FROM}",
+    "fromDisplayName": "${SMTP_FROM_DISPLAY_NAME}",
+    "user": "${SMTP_USER}",
+    "password": "${SMTP_PASSWORD}",
+    "starttls": "${SMTP_STARTTLS}",
+    "auth": "${SMTP_AUTH}"
+  },
   "clients": [
     {
       "clientId": "nuxt-web",
@@ -23,24 +51,71 @@
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "authorizationServicesEnabled": false,
+      "frontchannelLogout": true,
+      "consentRequired": false,
       "redirectUris": [
-        "http://localhost:3001/*",
-        "https://kanji-flow.online/*"
+        "https://kanji-flow.online/auth/callback",
+        "http://localhost:3001/auth/callback"
       ],
       "webOrigins": ["+"],
       "protocol": "openid-connect",
       "attributes": {
-        "pkce.code.challenge.method": "S256"
-      }
+        "pkce.code.challenge.method": "S256",
+        "frontchannel.logout.session.required": "true"
+      },
+      "protocolMappers": [
+        {
+          "name": "newsletter-consent",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "newsletterConsent",
+            "claim.name": "newsletter_consent",
+            "jsonType.label": "boolean",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "false"
+          }
+        }
+      ]
     },
     {
       "clientId": "nest-api",
       "enabled": true,
       "publicClient": false,
       "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": true,
-      "redirectUris": ["*"],
-      "protocol": "openid-connect"
+      "authorizationServicesEnabled": false,
+      "frontchannelLogout": true,
+      "consentRequired": false,
+      "redirectUris": ["/*"],
+      "webOrigins": ["/*"],
+      "protocol": "openid-connect",
+      "attributes": {
+        "frontchannel.logout.session.required": "true"
+      },
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
+          }
+        }
+      ]
     }
   ],
   "roles": {
@@ -50,10 +125,68 @@
         "description": "Default user role"
       },
       {
-        "name": "admin",
+        "name": "admin-kanji",
         "description": "Administrator role"
       }
     ]
   },
-  "defaultRoles": ["user"]
+  "groups": [
+    {
+      "name": "admin-kanji",
+      "path": "/admin-kanji",
+      "realmRoles": ["admin-kanji"]
+    }
+  ],
+  "identityProviders": [
+    {
+      "alias": "telegram",
+      "displayName": "Telegram",
+      "providerId": "telegram",
+      "enabled": true,
+      "trustEmail": false,
+      "storeToken": false,
+      "addReadTokenRoleOnCreate": false,
+      "firstBrokerLoginFlowAlias": "first broker login",
+      "config": {
+        "botId": "${TELEGRAM_BOT_ID}",
+        "botToken": "${TELEGRAM_BOT_TOKEN}",
+        "syncMode": "IMPORT"
+      }
+    }
+  ],
+  "identityProviderMappers": [
+    {
+      "name": "telegram-username",
+      "identityProviderAlias": "telegram",
+      "identityProviderMapper": "hardcoded-attribute-idp-mapper",
+      "config": {
+        "syncMode": "INHERIT",
+        "attribute": "telegram_linked",
+        "attribute.value": "true"
+      }
+    }
+  ],
+  "components": {
+    "org.keycloak.userprofile.UserProfileProvider": [
+      {
+        "providerId": "declarative-user-profile",
+        "config": {
+          "kc.user.profile.config": [
+            "{\"attributes\":[{\"name\":\"username\",\"displayName\":\"${username}\",\"validations\":{\"length\":{\"min\":3,\"max\":255},\"username-prohibited-characters\":{},\"up-username-not-idn-homograph\":{}},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"email\",\"displayName\":\"${email}\",\"validations\":{\"email\":{},\"length\":{\"max\":255}},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"firstName\",\"displayName\":\"${firstName}\",\"validations\":{\"length\":{\"max\":255},\"person-name-prohibited-characters\":{}},\"annotations\":{},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"lastName\",\"displayName\":\"${lastName}\",\"validations\":{\"length\":{\"max\":255},\"person-name-prohibited-characters\":{}},\"annotations\":{},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"newsletterConsent\",\"displayName\":\"${newsletterConsent}\",\"validations\":{\"options\":{\"options\":[\"true\",\"false\"]}},\"annotations\":{\"inputType\":\"checkbox\"},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false}],\"groups\":[{\"name\":\"user-metadata\",\"displayHeader\":\"User metadata\",\"displayDescription\":\"Attributes, which refer to user metadata\"}]}"
+          ]
+        }
+      }
+    ]
+  },
+  "defaultRoles": ["user"],
+  "users": [
+    {
+      "username": "service-account-nest-api",
+      "enabled": true,
+      "serviceAccountClientId": "nest-api",
+      "clientRoles": {
+        "realm-management": ["manage-users", "view-users", "query-users"]
+      }
+    }
+  ]
 }
