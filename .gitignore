@@ -24,3 +24,6 @@ Thumbs.db
 tmp/
 temp/
 front_tmp/
+
+# CodeGraph local index (machine-specific, not for committing)
+.codegraph/
