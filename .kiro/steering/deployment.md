@@ -542,3 +542,24 @@ SELECT * FROM realm WHERE name = 'KanjiFlow';
 - [Keycloak Realm Export/Import](https://www.keycloak.org/server/importExport)
 - [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
 - [Docker Multi-stage Builds](https://docs.docker.com/build/building/multi-stage/)
+
+## КРИТИЧЕСКОЕ ПРАВИЛО: не трогать чужие Docker-ресурсы
+
+Эта машина используется для нескольких проектов одновременно. При любых Docker-операциях
+(`docker compose down -v`, `docker volume rm`, `docker rm`, `docker network rm` и т.д.):
+
+- **НИКОГДА** не удалять, не останавливать и не пересоздавать контейнеры, volumes или сети,
+  принадлежащие **другим** проектам — в частности всё с префиксом `kamal-test-*`
+  (`kamal-test-mailhog-1`, `kamal-test-server`, `kamal-test-postgres-1`,
+  `kamal-test_kamal-docker`, `kamal-test_kamal-pg-data`), а также `kanji-flow-ai-*`,
+  `nestjs-*`, `language-service_*` и любые другие контейнеры/volumes, не относящиеся
+  напрямую к `docker-compose.yml` или `docker-compose.test.yml` этого репозитория.
+- Перед любой операцией `down -v` / `volume rm` / `rm` — ОБЯЗАТЕЛЬНО сначала вывести
+  `docker ps -a` и `docker volume ls`, явно показать пользователю какие именно ресурсы
+  будут затронуты, и получить подтверждение, если есть малейшее сомнение в том, что
+  ресурс принадлежит именно этому тестовому стенду (`kc_test_*`).
+- Даже для собственного тестового стенда (`docker-compose.test.yml`, ресурсы `kc_test_*`)
+  удаление volume с данными (`down -v`) — это разрушительная операция. Всегда спрашивать
+  подтверждение явно, а не считать это "безопасным, потому что тестовое".
+- Если название контейнера/volume не начинается явно с `kc_test_` или не определено в
+  `docker-compose.test.yml`/`docker-compose.yml` этого репозитория — не трогать вообще.

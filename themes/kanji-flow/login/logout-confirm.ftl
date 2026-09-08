@@ -1,17 +1,17 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout>
 
-<h1 class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">${msg("logoutConfirmTitle","Выход")}</h1>
+<h1 class="text-2xl font-bold mb-6 text-center text-foreground">${msg("logoutConfirmTitle","Выход")}</h1>
 
 <div class="space-y-4">
-  <p class="text-sm text-gray-600 dark:text-gray-400 text-center">
+  <p class="text-sm text-muted text-center">
     ${msg("logoutConfirmHeader","Вы уверены, что хотите выйти?")}
   </p>
 
   <form action="${url.logoutConfirmAction}" method="POST">
     <input type="hidden" name="session_code" value="${logoutConfirm.code}">
     <button type="submit" name="confirmLogout"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-plum-600 hover:bg-plum-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-plum-500 transition-colors disabled:opacity-50 dark:focus:ring-offset-gray-800">
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-plum-600 hover:bg-plum-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-plum-500 transition-colors disabled:opacity-50 focus:ring-offset-surface">
       ${msg("doLogout","Выйти")}
     </button>
   </form>

@@ -34,18 +34,18 @@
     </#if>
 </head>
 
-<body class="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+<body class="min-h-screen flex flex-col bg-canvas text-foreground transition-colors duration-300">
 
     <#-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/60 dark:border-gray-700/60">
-        <div class="mx-auto max-w-7xl px-3 sm:px-6 h-14 md:h-16 flex items-center gap-2 md:gap-8">
+    <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-surface/80 border-b border-border/60">
+        <div class="mx-auto max-w-7xl px-3 sm:px-6 h-14 md:h-16 flex items-center gap-2 md:gap-6">
             <a href="https://kanji-flow.online" class="min-h-[44px] flex items-center shrink-0">
-                <img src="${url.resourcesPath}/img/new-circle-logo.svg" alt="KanjiFlow" class="h-8 w-8 md:h-12 md:w-12">
+                <img src="${url.resourcesPath}/img/new-logo.svg" alt="KanjiFlow" width="65" height="50" class="h-10 md:h-12 w-auto">
             </a>
             <div class="flex-1"></div>
-            <nav class="flex items-center gap-0.5 md:gap-1">
+            <nav class="flex items-center gap-1">
                 <a href="https://kanji-flow.online/about"
-                   class="min-h-[44px] flex items-center px-2 md:px-3 py-1.5 text-xs md:text-sm rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 text-gray-600 dark:text-gray-300 hover:text-plum-600 dark:hover:text-plum-400 hover:bg-gray-100 dark:hover:bg-gray-800">
+                   class="min-h-[44px] inline-flex items-center px-3.5 py-2 text-sm rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface font-medium text-muted hover:text-foreground hover:bg-surface-elevated">
                     ${msg("navAbout","О проекте")}
                 </a>
             </nav>
@@ -60,7 +60,7 @@
             <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -z-10 w-[400px] h-[400px] rounded-full bg-plum-100/40 dark:bg-plum-700/20 blur-3xl pointer-events-none" aria-hidden="true"></div>
 
             <div class="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] p-6">
-                <div class="w-full max-w-md rounded-card shadow-card border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 p-6 sm:p-8">
+                <div class="w-full max-w-md rounded-card shadow-card border border-border bg-surface p-6 sm:p-8">
 
                     <#-- Logo above form -->
                     <div class="flex justify-center mb-4">

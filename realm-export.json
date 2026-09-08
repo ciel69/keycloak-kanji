@@ -55,6 +55,7 @@
       "authorizationServicesEnabled": false,
       "frontchannelLogout": true,
       "consentRequired": false,
+      "baseUrl": "https://kanji-flow.online",
       "redirectUris": [
         "https://kanji-flow.online/auth/callback",
         "http://localhost:3001/auth/callback"
