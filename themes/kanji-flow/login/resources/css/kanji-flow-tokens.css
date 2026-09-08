@@ -1,0 +1,95 @@
+/* ==========================================================================
+   kanji-flow-tokens.css — Semantic design tokens (light + dark) for the
+   Keycloak "Kanji Flow" auth theme.
+
+   Mirrors the Nuxt frontend design system (app/assets/tailwind.css +
+   tailwind.config.js + DESIGN.md). The Keycloak theme ships a compiled
+   Tailwind snapshot (entry.css) built from an OLDER gray/indigo scheme, so
+   these semantic utilities are re-declared here on top of CSS custom
+   properties that invert automatically under `html.dark`.
+
+   Loaded LAST (see theme.properties `styles`) so these classes win over the
+   stale snapshot values they overlap with.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Semantic tokens — auto-theming (values from app/assets/tailwind.css)
+   -------------------------------------------------------------------------- */
+:root {
+  --color-canvas: 247 245 248;          /* #f7f5f8 */
+  --color-surface: 255 255 255;         /* #ffffff */
+  --color-surface-elevated: 250 248 251;/* #faf8fb */
+  --color-border: 229 224 232;          /* #e5e0e8 */
+  --color-foreground: 33 27 37;         /* #211b25 */
+  --color-muted: 113 105 121;           /* #716979 */
+  --color-faint: 170 161 173;           /* #aaa1ad */
+}
+
+html.dark {
+  --color-canvas: 21 17 25;             /* #151119 */
+  --color-surface: 33 27 37;            /* #211b25 */
+  --color-surface-elevated: 42 34 48;   /* #2a2230 */
+  --color-border: 69 53 78;             /* #45354e */
+  --color-foreground: 245 238 246;      /* #f5eef6 */
+  --color-muted: 200 189 202;           /* #c8bdca */
+  --color-faint: 149 139 153;           /* #958b99 */
+}
+
+/* --------------------------------------------------------------------------
+   Semantic surfaces / text / border (auto-theming via the vars above)
+   -------------------------------------------------------------------------- */
+.bg-canvas { background-color: rgb(var(--color-canvas)); }
+.bg-surface { background-color: rgb(var(--color-surface)); }
+.bg-surface-elevated { background-color: rgb(var(--color-surface-elevated)); }
+
+.text-foreground { color: rgb(var(--color-foreground)); }
+.text-muted { color: rgb(var(--color-muted)); }
+.text-faint { color: rgb(var(--color-faint)); }
+
+.border-border { border-color: rgb(var(--color-border)); }
+
+/* Alpha variants used by the fixed header / dividers */
+.bg-surface\/80 { background-color: rgb(var(--color-surface) / 0.8); }
+.border-border\/60 { border-color: rgb(var(--color-border) / 0.6); }
+.border-border\/70 { border-color: rgb(var(--color-border) / 0.7); }
+
+/* Focus-ring offset color (2px gap behind the plum ring) — theme-aware */
+.focus\:ring-offset-surface:focus,
+.focus-visible\:ring-offset-surface:focus-visible {
+  --tw-ring-offset-color: rgb(var(--color-surface));
+}
+
+/* Hover pair used by nav / password-toggle / provider buttons */
+.hover\:bg-canvas:hover { background-color: rgb(var(--color-canvas)); }
+.hover\:bg-surface-elevated:hover { background-color: rgb(var(--color-surface-elevated)); }
+.hover\:text-foreground:hover { color: rgb(var(--color-foreground)); }
+.hover\:text-muted:hover { color: rgb(var(--color-muted)); }
+
+/* Structural utility present in the Nuxt frontend (public-header nav pill)
+   but absent from the compiled entry.css snapshot. */
+.px-3\.5 { padding-left: 0.875rem; padding-right: 0.875rem; }
+
+/* --------------------------------------------------------------------------
+   Brand plum — fixed values (tailwind.config.js), NOT inverted by theme.
+   These are the login/form action + link colours in both light and dark.
+   -------------------------------------------------------------------------- */
+.text-plum-300 { color: #c384a8; }
+.text-plum-400 { color: #b784a8; }
+.text-plum-500 { color: #8b5a8f; }
+.text-plum-600 { color: #6f4e73; }
+.text-plum-700 { color: #45354e; }
+.bg-plum-500 { background-color: #8b5a8f; }
+.bg-plum-600 { background-color: #6f4e73; }
+.bg-plum-700 { background-color: #45354e; }
+
+.hover\:text-plum-600:hover { color: #6f4e73; }
+.hover\:text-plum-700:hover { color: #45354e; }
+.hover\:bg-plum-600:hover { background-color: #6f4e73; }
+.hover\:bg-plum-700:hover { background-color: #45354e; }
+
+/* Dark-mode link variants (the frontend uses light plum links in dark mode).
+   Scoped under .dark exactly like Tailwind's darkMode:'class' strategy. */
+.dark .dark\:text-plum-400 { color: #b784a8; }
+.dark .dark\:text-plum-300 { color: #c384a8; }
+.dark .dark\:hover\:text-plum-400:hover { color: #b784a8; }
+.dark .dark\:hover\:text-plum-300:hover { color: #c384a8; }
