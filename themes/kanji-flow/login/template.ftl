@@ -1,4 +1,4 @@
-<#macro registrationLayout bodyClass="" displayInfo=false displayMessage=true displayRequiredFields=false>
+<#macro registrationLayout bodyClass="" displayInfo=false displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true>
 <!DOCTYPE html>
 <html class="${properties.kcHtmlClass!}">
 <head>
@@ -80,7 +80,12 @@
                     </#if>
 
                     <#-- Nested page content (login.ftl / register.ftl / etc.) -->
-                    <#nested>
+                    <#-- Секцию "form" читают наследуемые от темы "keycloak" шаблоны
+                         (idp-review-user-profile.ftl, login-page-expired.ftl,
+                         login-idp-link-*.ftl и др.) через #if section = "form".
+                         Без аргумента у #nested переменная section = null и рендер
+                         падает с InvalidReferenceException -> 500. -->
+                    <#nested "form">
                 </div>
             </div>
         </div>
